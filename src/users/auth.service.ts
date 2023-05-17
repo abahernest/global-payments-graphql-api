@@ -23,13 +23,14 @@ export class AuthService {
   }
 
   async generateUserCredentials(user: User) {
-    const payload = {
+    const payload: CurrentUser = {
+      id: user.id.toString(),
       email: user.email,
       name: user.name,
     };
 
     return {
-      access_token: this.jwtTokenService.sign(payload)
+      access_token: this.jwtTokenService.sign(payload,{expiresIn:"24h"})
     };
   }
 }

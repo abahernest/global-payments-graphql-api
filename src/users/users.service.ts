@@ -46,10 +46,10 @@ export class UsersService {
     }
   }
 
-  async fetchSanitizedUser(id: string):Promise<SanitizedUserDTO> {
-    const user = await this.userModel.findOne({ _id: id }).exec();
+  async fetchSanitizedUser(email: string):Promise<SanitizedUserDTO> {
+    const user = await this.findByEmail(email);
     if (user) {
-      return { _id: user.id, name: user.name, email: user.email };
+      return { _id: user.id.toString(), name: user.name, email: user.email };
     }
   }
 

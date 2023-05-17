@@ -10,14 +10,7 @@ type User {
 
   """User email"""
   email: String!
-  created_at: DateTime!
-  updated_at: DateTime!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type LoggedUserOutput {
   """Generated access_token of the user"""
@@ -51,6 +44,11 @@ type TransactionAndNestedUserOutput {
   timestamp: DateTime!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Transaction {
   id: String!
 
@@ -68,52 +66,14 @@ type Transaction {
 }
 
 type Query {
-  account(userId: String!): SanitizedUserDTO!
-  transactions(userId: String!, page: Int! = 1, limit: Int! = 100): [TransactionAndNestedUserOutput!]!
-  balance(userId: String!): Float!
+  account: SanitizedUserDTO!
+  transactions(page: Int! = 1, limit: Int! = 100): [TransactionAndNestedUserOutput!]!
+  balance: Float!
 }
 
 type Mutation {
-  createAccount(payload: CreateAccountInput!): User!
-  login(payload: LoginInput!): LoggedUserOutput!
-  topup(payload: TopupInput!): TopupOutput!
-  transfer(payload: TransferInput!): Transaction!
-}
-
-input CreateAccountInput {
-  """first name of the user"""
-  name: String!
-
-  """email of the user"""
-  email: String!
-
-  """password of the user"""
-  password: String!
-}
-
-input LoginInput {
-  """email of the user"""
-  email: String!
-
-  """password of the user"""
-  password: String!
-}
-
-input TopupInput {
-  """id of the user to make topup"""
-  userId: String!
-
-  """topup amount"""
-  amount: Float!
-}
-
-input TransferInput {
-  """transfer amount"""
-  amount: Float!
-
-  """email of the user to receive transfer"""
-  email: String!
-
-  """id of the user to make transfer"""
-  userId: String!
+  createAccount(name: String!, email: String!, password: String!): User!
+  login(email: String!, password: String!): LoggedUserOutput!
+  topup(amount: Float!): TopupOutput!
+  transfer(amount: Float!, email: String!): Transaction!
 }

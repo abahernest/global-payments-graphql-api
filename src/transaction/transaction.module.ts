@@ -9,6 +9,7 @@ import { ConfigService } from "@nestjs/config";
 import { Transaction, TransactionSchema, Wallet, WalletSchema } from "./entities/transaction.entity";
 import { UsersService } from "../users/users.service";
 import { AuthService } from "../users/auth.service";
+import { JwtStrategy } from "../users/jwt.strategy";
 
 @Module({
   imports: [
@@ -39,6 +40,6 @@ import { AuthService } from "../users/auth.service";
       inject: [ConfigService],
     }),
   ],
-  providers: [TransactionResolver, TransactionService, UsersService, AuthService]
+  providers: [TransactionResolver, TransactionService, UsersService, AuthService, JwtStrategy]
 })
 export class TransactionModule {}

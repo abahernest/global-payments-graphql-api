@@ -14,10 +14,6 @@ export class User {
   email: string;
   @Prop()
   password: string;
-  @Field(() => Date)
-  created_at: MongooseSchema.Types.Date;
-  @Field(() => Date)
-  updated_at: MongooseSchema.Types.Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
