@@ -24,13 +24,60 @@ type LoggedUserOutput {
   access_token: String!
 }
 
+type Transaction {
+  id: String!
+
+  """sender information"""
+  sender: String!
+
+  """recipient information"""
+  recipient: String!
+
+  """transaction amount"""
+  amount: Float!
+
+  """transaction date"""
+  timestamp: DateTime!
+}
+
+type TopupOutput {
+  """account balance"""
+  balance: Float!
+}
+
+type SanitizedUserDTO {
+  _id: ID!
+  name: String!
+  email: String!
+}
+
+type TransactionAndNestedUserOutput {
+  _id: ID!
+
+  """sender information"""
+  sender: SanitizedUserDTO!
+
+  """recipient information"""
+  recipient: SanitizedUserDTO!
+
+  """transaction amount"""
+  amount: Float!
+
+  """transaction date"""
+  timestamp: DateTime!
+}
+
 type Query {
   users: [User!]!
+  transactions(userId: String!, page: Int! = 1, limit: Int! = 100): [TransactionAndNestedUserOutput!]!
+  balance(userId: String!): Float!
 }
 
 type Mutation {
   createAccount(payload: CreateAccountInput!): User!
   login(payload: LoginInput!): LoggedUserOutput!
+  topup(payload: TopupInput!): TopupOutput!
+  transfer(payload: TransferInput!): Transaction!
 }
 
 input CreateAccountInput {
@@ -50,4 +97,23 @@ input LoginInput {
 
   """password of the user"""
   password: String!
+}
+
+input TopupInput {
+  """id of the user to make topup"""
+  userId: String!
+
+  """topup amount"""
+  amount: Float!
+}
+
+input TransferInput {
+  """transfer amount"""
+  amount: Float!
+
+  """email of the user to receive transfer"""
+  email: String!
+
+  """id of the user to make transfer"""
+  userId: String!
 }
