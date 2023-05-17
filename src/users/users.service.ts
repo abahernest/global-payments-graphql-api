@@ -1,26 +1,54 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
+import { Injectable, NotFoundException, HttpException, BadRequestException, Inject, forwardRef } from "@nestjs/common";
+import { CreateAccountInput } from './dto/user.input.dto';
+import { LoggedUserOutput } from './dto/auth.output.dto';
+import { LoginInput } from './dto/auth.input.dto';
+import { User } from './entities/user.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class UsersService {
-  create(createUserInput: CreateUserInput) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectModel(User.name)
+    private readonly userModel: Model<User>,
+    private readonly authService: AuthService,
+  ) {}
+  async createAccount(data: CreateAccountInput):Promise<User> {
+    let user = await this.findByEmail(data.email);
+    if (!user) {
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+      data.password = hashedPassword;
+      user = await this.userModel.create(data);
+      return user;
+    }
+    throw new BadRequestException('user already exists');
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async login(data: LoginInput): Promise<LoggedUserOutput> {
+    const user = await this.authService.validateUser(data.email, data.password);
+    if (!user) {
+      throw new BadRequestException('incorrect email or password');
+    }
+    return this.authService.generateUserCredentials(user);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findAll():Promise<Array<User>> {
+    return await this.userModel.find({});
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
+  async findById(id: string):Promise<User> {
+    const user = await this.userModel.findOne({ _id: id }).exec();
+    if (user) {
+      return user;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async findByEmail(email: string):Promise<User> {
+    const user = await this.userModel.findOne({ email }).exec();
+    if (user) {
+      return user;
+    }
   }
 }
