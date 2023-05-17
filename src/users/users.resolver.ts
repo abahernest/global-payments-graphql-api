@@ -5,6 +5,7 @@ import { CreateAccountInput } from './dto/user.input.dto';
 import { LoginInput } from './dto/auth.input.dto';
 import { LoggedUserOutput } from './dto/auth.output.dto';
 import { ValidationPipe } from "@nestjs/common";
+import { SanitizedUserDTO } from "../transaction/dto/transaction.output";
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -22,8 +23,8 @@ export class UsersResolver {
     return this.usersService.login(payload);
   }
 
-  @Query(() => [User], { name: 'users' })
-  findAll() {
-    return this.usersService.findAll();
+  @Query(() => SanitizedUserDTO, { name: 'account' })
+  account(@Args('userId', { type: () => String }) userId: string) {
+    return this.usersService.fetchSanitizedUser(userId);
   }
 }

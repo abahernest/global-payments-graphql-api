@@ -24,22 +24,6 @@ type LoggedUserOutput {
   access_token: String!
 }
 
-type Transaction {
-  id: String!
-
-  """sender information"""
-  sender: String!
-
-  """recipient information"""
-  recipient: String!
-
-  """transaction amount"""
-  amount: Float!
-
-  """transaction date"""
-  timestamp: DateTime!
-}
-
 type TopupOutput {
   """account balance"""
   balance: Float!
@@ -67,8 +51,24 @@ type TransactionAndNestedUserOutput {
   timestamp: DateTime!
 }
 
+type Transaction {
+  id: String!
+
+  """sender information"""
+  sender: String!
+
+  """recipient information"""
+  recipient: String!
+
+  """transaction amount"""
+  amount: Float!
+
+  """transaction date"""
+  timestamp: DateTime!
+}
+
 type Query {
-  users: [User!]!
+  account(userId: String!): SanitizedUserDTO!
   transactions(userId: String!, page: Int! = 1, limit: Int! = 100): [TransactionAndNestedUserOutput!]!
   balance(userId: String!): Float!
 }

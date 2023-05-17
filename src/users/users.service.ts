@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from './auth.service';
+import { SanitizedUserDTO } from "../transaction/dto/transaction.output";
 
 @Injectable()
 export class UsersService {
@@ -42,6 +43,13 @@ export class UsersService {
     const user = await this.userModel.findOne({ _id: id }).exec();
     if (user) {
       return user;
+    }
+  }
+
+  async fetchSanitizedUser(id: string):Promise<SanitizedUserDTO> {
+    const user = await this.userModel.findOne({ _id: id }).exec();
+    if (user) {
+      return { _id: user.id, name: user.name, email: user.email };
     }
   }
 
