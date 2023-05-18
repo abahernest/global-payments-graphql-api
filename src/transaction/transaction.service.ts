@@ -1,10 +1,13 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import { TopupInput, TransferInput, TransactionsQueryInput } from './dto/transaction.input';
 import { Transaction, Wallet } from "./entities/transaction.entity";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model, Types } from "mongoose";
 import { UsersService } from "../users/users.service";
 import { TransactionAndNestedUserOutput, TopupOutput } from "./dto/transaction.output";
+import { ClientKafka, ClientProxy } from "@nestjs/microservices";
+
+
 
 @Injectable()
 export class TransactionService {
@@ -14,6 +17,8 @@ export class TransactionService {
     @InjectModel(Wallet.name)
     private readonly walletModel: Model<Wallet>,
     private readonly userService: UsersService,
+    @Inject('GLOBAL_PAYMENT_PRODUCER')
+    private readonly kafkaClient: ClientKafka
   ) {
   }
   async topup(data: TopupInput): Promise<TopupOutput> {
@@ -54,6 +59,7 @@ export class TransactionService {
     const transaction = await this.transactionModel.create(transactionObj)
 
     //TODO: publish to kafka
+    this.kafkaClient.emit<number>('global-payment-transactions', JSON.stringify(transaction));
 
     return transaction
   }

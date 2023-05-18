@@ -10,6 +10,10 @@ import { Transaction, TransactionSchema, Wallet, WalletSchema } from "./entities
 import { UsersService } from "../users/users.service";
 import { AuthService } from "../users/auth.service";
 import { JwtStrategy } from "../users/jwt.strategy";
+import { ClientsModule, Transport } from "@nestjs/microservices";
+import { GetKafkaConfig } from "../kafka.config";
+
+const kafkaconfig = GetKafkaConfig();
 
 @Module({
   imports: [
@@ -39,6 +43,27 @@ import { JwtStrategy } from "../users/jwt.strategy";
       }),
       inject: [ConfigService],
     }),
+    ClientsModule.register([
+      {
+        name: 'GLOBAL_PAYMENT_PRODUCER',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'global-payment-producer',
+            brokers: [kafkaconfig.BOOTSTRAP_SERVERS],
+            ssl: true,
+            sasl: {
+              mechanism: 'plain',
+              username: kafkaconfig.SASL_USERNAME,
+              password: kafkaconfig.SASL_PASSWORD,
+            },
+          },
+          consumer: {
+            groupId: 'global-payments'
+          },
+        },
+      }
+    ]),
   ],
   providers: [TransactionResolver, TransactionService, UsersService, AuthService, JwtStrategy]
 })
