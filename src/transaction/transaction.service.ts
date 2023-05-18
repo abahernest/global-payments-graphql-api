@@ -46,8 +46,8 @@ export class TransactionService {
       throw new BadRequestException('insufficient balance')
     }
 
-    const senderWallet = { amount: -data.amount, user: data.userId };
-    const recipientWallet = { amount: data.amount, user: recipient.id };
+    const senderWallet = { amount: -data.amount, userId: data.userId };
+    const recipientWallet = { amount: data.amount, userId: recipient.id };
 
     await this.walletModel.insertMany([
       senderWallet,

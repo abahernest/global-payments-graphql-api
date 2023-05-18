@@ -8,7 +8,7 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      playground: false,
+      playground: true,
     })
   ],
 })

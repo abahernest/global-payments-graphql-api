@@ -9,6 +9,8 @@ A simple payment service
 - Apache Kafka (Confluent Cloud)
 - NestJs
 
+## Live URL
+[https://global-payments-graph-api.herokuapp.com/graphql](https://global-payments-graph-api.herokuapp.com/graphql)
 
 ## Installation
 
