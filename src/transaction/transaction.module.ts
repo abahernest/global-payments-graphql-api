@@ -8,10 +8,10 @@ import { JwtModule } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { Transaction, TransactionSchema, Wallet, WalletSchema } from "./entities/transaction.entity";
 import { UsersService } from "../users/users.service";
-import { AuthService } from "../users/auth.service";
-import { JwtStrategy } from "../users/jwt.strategy";
+import { AuthService } from "../auth/auth.service";
+import { JwtStrategy } from "../auth/jwt.strategy";
 import { ClientsModule, Transport } from "@nestjs/microservices";
-import { GetKafkaConfig } from "../kafka.config";
+import { GetKafkaConfig } from "../config/kafka.config";
 
 const kafkaconfig = GetKafkaConfig();
 

@@ -2,12 +2,12 @@ import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateAccountInput } from './dto/user.input.dto';
-import { LoginInput } from './dto/auth.input.dto';
-import { LoggedUserOutput } from './dto/auth.output.dto';
+import { LoginInput } from '../auth/dto/auth.input.dto';
+import { LoggedUserOutput } from '../auth/dto/auth.output.dto';
 import { UseGuards, ValidationPipe } from "@nestjs/common";
 import { SanitizedUserDTO } from "../transaction/dto/transaction.output";
-import { JwtAuthGuard } from "./jwt-auth.guard";
-import { CurrentUser } from "./auth.decorators";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { CurrentUser } from "../auth/auth.decorators";
 import { EmailValidationPipe, PasswordValidationPipe } from "./user.validation";
 
 @Resolver(() => User)

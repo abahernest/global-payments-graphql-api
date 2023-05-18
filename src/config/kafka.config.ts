@@ -7,14 +7,11 @@ interface KafkaConfig {
   SASL_PASSWORD: string
 }
 export function GetKafkaConfig(): KafkaConfig {
-  const config = {
+  return {
     BOOTSTRAP_SERVERS: process.env['BOOTSTRAP_SERVERS'],
     SASL_USERNAME: process.env['SASL_USERNAME'],
     SASL_PASSWORD: process.env['SASL_PASSWORD']
   }
-
-  console.log(config)
-  return config;
 };
 
 export function GetKafkaBootstrapServer(): string {

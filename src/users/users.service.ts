@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException, HttpException, BadRequestException, Inject, forwardRef } from "@nestjs/common";
 import { CreateAccountInput } from './dto/user.input.dto';
-import { LoggedUserOutput } from './dto/auth.output.dto';
-import { LoginInput } from './dto/auth.input.dto';
+import { LoggedUserOutput } from '../auth/dto/auth.output.dto';
+import { LoginInput } from '../auth/dto/auth.input.dto';
 import { User } from './entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth/auth.service';
 import { SanitizedUserDTO } from "../transaction/dto/transaction.output";
 
 @Injectable()
